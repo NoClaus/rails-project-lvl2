@@ -19,7 +19,6 @@ console:
 
 linters:
 	bundle exec rubocop
-	bundle exec slim-lint app/views
 
 test:
 	bundle exec rails test
