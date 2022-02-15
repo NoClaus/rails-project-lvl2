@@ -4,7 +4,6 @@
 # documentation.
 # This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
 # For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
-
 name: ruby-check
 
 on:
@@ -17,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: ['3.0.1']
+        ruby-version: ['3.0.2']
     steps:
     - uses: actions/checkout@v2
     - name: Set up Ruby
@@ -30,5 +29,4 @@ jobs:
       run: make setup
     - name: Run rubocop
       run: make lint
-    - name: Run tests
-      run: make test
+    - name: Run testse test
