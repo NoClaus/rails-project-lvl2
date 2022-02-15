@@ -32,6 +32,7 @@ gem 'ancestry'
 gem 'devise'
 gem 'rollbar'
 gem 'simple_form'
+gem 'slim_lint'
 gem 'slim-rails'
 
 group :development, :test do
