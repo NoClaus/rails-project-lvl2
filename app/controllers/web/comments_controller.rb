@@ -2,20 +2,45 @@
 
 module Web
   class CommentsController < ApplicationController
+    before_action :authenticate_user!
+    before_action :set_post
+    before_action :set_comment, only: %i[edit update destroy]
+
+    def edit; end
+
     def create
-      @comment = post.comments.build(comment_params.merge(user: current_user))
+      @comment = @post.comments.build(comment_params)
+      @comment.user = current_user
 
       if @comment.save
-        redirect_to(post, notice: t('.success'))
+        redirect_to post_path(@post), notice: t('.success', scope: :flash)
       else
-        redirect_to(post, alert: t('.failure'))
+        redirect_to post_path(@post), alert: t('.error', scope: :flash)
       end
+    end
+
+    def update
+      if @comment.update(comment_params)
+        redirect_to post_path(@post), notice: t('.success', scope: :flash)
+      else
+        render :edit, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      @comment.destroy
+
+      redirect_to post_path(@post), notice: t('.success', scope: :flash)
     end
 
     private
 
-    def post
-      @post ||= Post.find(params[:post_id])
+    def set_post
+      @post = Post.find(params[:post_id])
+    end
+
+    def set_comment
+      @comment = @post.comments.find(params[:id])
     end
 
     def comment_params

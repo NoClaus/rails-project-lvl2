@@ -2,11 +2,12 @@
 
 Rails.application.routes.draw do
   devise_for :users
-  
+
   scope module: :web do
     root 'posts#index'
-    resources :posts, only: %i[index new create show destroy] do
-      resources :comments, only: :create
+    resources :posts do
+      resources :comments, exclude: %i[index show], controller: 'post_comments'
+      resources :likes, only: %i[create destroy], controller: 'post_likes'
     end
   end
 end

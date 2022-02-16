@@ -2,59 +2,55 @@
 
 module Web
   class PostsController < ApplicationController
+    before_action :authenticate_user!, except: %i[index show]
+    before_action :set_post, only: %i[show edit update destroy]
+
     def index
-      @posts = Post.all
+      @posts = Post.includes(:creator)
     end
 
     def show
-      @post = Post.find(params[:id])
+      @comments = @post.comments.order(created_at: :desc)
+      @comment = @post.comments.build
+      @user_like = @post.likes.find_by(user: current_user)
     end
 
     def new
       @post = Post.new
     end
 
-    def edit
-      @post = Post.find(params[:id])
-    end
+    def edit; end
 
     def create
       @post = Post.new(post_params)
-      @post.user_id = current_user
+      @post.creator = current_user
 
       if @post.save
-        flash[:notice] = 'Post has been successfully created'
-        redirect_to post_path(@post)
+        redirect_to post_path(@post), notice: t('.success', scope: :flash)
       else
-        flash[:notice] = 'Post has not been created'
-        render :new
+        render :new, status: :unprocessable_entity
       end
     end
 
     def update
-      @post = Post.find(params[:id])
-
       if @post.update(post_params)
-        flash[:notice] = 'Post has been successfully updated'
-        redirect_to post_path(@post)
+        redirect_to post_path(@post), notice: t('.success', scope: :flash)
       else
-        flash[:notice] = 'Post has not been updated'
-        render :edit
+        render :edit, status: :unprocessable_entity
       end
     end
 
     def destroy
-      @post = Post.find(params[:id])
-      if @post.destroy
-        flash[:notice] = 'Post has been successfully deleted'
-        redirect_to posts_path
-      else
-        flash[:notice] = 'Post has not been deleted'
-        redirect_to post_path(@post)
-      end
+      @post.destroy
+
+      redirect_to posts_path, notice: t('.success', scope: :flash)
     end
 
     private
+
+    def set_post
+      @post = Post.includes(:likes, :comments).find(params[:id])
+    end
 
     def post_params
       params.require(:post).permit(:title, :body, :post_category_id)

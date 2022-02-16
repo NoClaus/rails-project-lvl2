@@ -1,5 +1,27 @@
-.row
-  h1 = @post.title
-  p = @post.body
-  = link_to 'Edit', edit_post_path(@post)
-  = link_to 'Destroy', @post, method: :delete, data: { confirm: 'Are you sure ?' }
+.row.gx-4.gx-lg-5.justify-content-center
+  .col-sm-10
+    h1 = @post.title
+
+    hr
+
+    p = @post.body
+    .d-flex.justify-content-between.align-items-center.mt-5
+      span.text-muted
+        = @post.creator.email
+      = render "web/posts/like"
+    - if @post.creator == current_user
+      = link_to t(:edit), edit_post_path(@post), class: 'link-secondary me-2'
+      = link_to t(:destroy), @post, method: :delete, data: { confirm: t(:destroy_confirmation) }, class: 'link-danger'
+
+    hr
+
+    h3 = t(:heading, scope: :post_comments)
+    - if user_signed_in?
+      = simple_form_for @comment, url: post_comments_path(@post) do |f|
+        = f.input :content, label: false, as: :text, input_html: { rows: 5 }
+        = f.submit class: 'btn btn-outline-secondary btn-sm'
+    hr
+
+    - if @comments.any?
+      ul.list-group.list-group-flush
+        = render partial: 'web/post_comments/comment', collection: @comments.filter { |comment| comment.is_root? }

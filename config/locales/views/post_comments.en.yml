@@ -1,0 +1,7 @@
+en:
+  post_comments:
+    heading: Comments
+    edit:
+      heading: Edit comment
+    actions:
+      reply: Reply
