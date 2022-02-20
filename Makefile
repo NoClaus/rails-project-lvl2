@@ -16,10 +16,10 @@ db-reset:
 
 console:
 	bundle exec rails console
-
+	
 lint: lint-code
 
-linters:
+lint-code:
 	bundle exec rubocop
 	bundle exec slim-lint app/views/
 
