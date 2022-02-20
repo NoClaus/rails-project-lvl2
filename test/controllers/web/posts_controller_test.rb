@@ -2,77 +2,45 @@
 
 require 'test_helper'
 
-class Web::CommentsControllerTest < ActionDispatch::IntegrationTest
+class Web::PostsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @user = users('user_1')
-    sign_in @user
-  end
-
-  test '#index' do
-    get root_path
-    assert_response :success
-  end
-
-  test '#new' do
-    get new_post_path
-    assert_response :success
-  end
-
-  test '#show' do
-    post = posts('post_1')
-    get post_path(post)
-    assert_response :success
-  end
-
-  test '#edit' do
-    post = posts('post_1')
-    get edit_post_path(post)
-    assert_response :success
-  end
-
-  test '#create' do
-    category = post_categories('category_2')
-    attrs = {
-      title: Faker::Lorem.sentence,
-      body: Faker::Lorem.paragraph,
-      post_category_id: category.id
+    @post_attrs = {
+      title: Faker::Job.title,
+      body: Faker::Lorem.paragraph_by_chars(number: 150),
+      post_category_id: post_categories(:one).id
     }
-
-    post posts_path, params: { post: attrs }
-
-    post = Post.find_by(title: attrs[:title])
-
-    assert post
-    assert_redirected_to post_path(post)
-    assert_equal post.creator, @user
-    assert_equal post.post_category, category
   end
 
-  test '#update' do
-    old_post = posts('post_1')
-    category = post_categories('category_0')
-    attrs = {
-      title: Faker::Lorem.sentence,
-      post_category_id: category.id
-    }
-
-    patch post_path(old_post), params: { post: attrs }
-
-    post = Post.find(old_post[:id])
-
-    assert post
-    assert_redirected_to post_path(post)
-    assert_not_equal post.title, old_post.title
-    assert_not_equal post.post_category, old_post.post_category
+  test 'should get index' do
+    get root_url
+    assert_response :success
   end
 
-  test '#destroy' do
-    post = posts('post_1')
+  test 'should get redirect to login' do
+    get new_post_url
+    assert_redirected_to new_user_session_url
+  end
 
-    assert_difference('Post.count', -1) do
-      delete post_path(post)
-    end
+  test 'should get new' do
+    user = users(:one)
+    sign_in(user)
 
-    assert_redirected_to posts_path
+    get new_post_url
+    assert_response :success
+  end
+
+  test 'should create post' do
+    user = users(:one)
+    sign_in(user)
+
+    post posts_url, params: { post: @post_attrs }
+
+    assert { Post.find_by! @post_attrs.merge(creator: user) }
+    assert_redirected_to root_url
+  end
+
+  test 'should show post' do
+    get post_url(posts(:one))
+    assert_response :success
   end
 end

@@ -1,11 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  post: post_1
-  user: user_1
-  content: MyText
+  id: 1
+  content: <%= Faker::Lorem.sentence %>
+  post: one
+  user: one
 
 two:
-  post: post_1
-  user: user_2
-  content: MyText
+  id: 2
+  content: <%= Faker::Lorem.sentence %>
+  post: two
+  user: two

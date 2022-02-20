@@ -1,27 +1,26 @@
-.row.gx-4.gx-lg-5.justify-content-center
-  .col-sm-10
-    h1 = @post.title
+p
+  = link_to t('.all'), root_path
+  = ' / '
+  = @post.post_category
+h1 = @post.title
+p = simple_format @post.body
 
-    hr
+.d-flex.justify-content-between.mb-3.mt-1
+  .post-section
+    span.me-2 = @post.creator.email
+    span = time_ago_in_words @post.created_at
+  .likes-section
+    span.me-2 = @post.likes.size
+    - if @like.present?
+      = link_to post_like_path(@post, @like), method: :delete
+        i.bi.bi-hand-thumbs-up-fill
+    - else
+      = link_to post_likes_path(@post), method: :post
+        i.bi.bi-hand-thumbs-up
+- if user_signed_in?
+  = render 'web/posts/comments/comment_form', post: @post, comment: @new_comment, parent_id: nil
+- else
+  = t('.you_not_authorized_html', href: link_to(t('.sign_in'), new_user_session_url))
 
-    p = @post.body
-    .d-flex.justify-content-between.align-items-center.mt-5
-      span.text-muted
-        = @post.creator.email
-      = render "web/posts/like"
-    - if @post.creator == current_user
-      = link_to t(:edit), edit_post_path(@post), class: 'link-secondary me-2'
-      = link_to t(:destroy), @post, method: :delete, data: { confirm: t(:destroy_confirmation) }, class: 'link-danger'
-
-    hr
-
-    h3 = t(:heading, scope: :post_comments)
-    - if user_signed_in?
-      = simple_form_for @comment, url: post_comments_path(@post) do |f|
-        = f.input :content, label: false, as: :text, input_html: { rows: 5 }
-        = f.submit class: 'btn btn-outline-secondary btn-sm'
-    hr
-
-    - if @comments.any?
-      ul.list-group.list-group-flush
-        = render partial: 'web/post_comments/comment', collection: @comments.filter { |comment| comment.is_root? }
+- if @comments.present?
+  = render 'web/posts/comments/inner_comments', comments: @comments

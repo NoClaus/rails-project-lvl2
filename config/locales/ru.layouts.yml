@@ -1,0 +1,11 @@
+ru:
+  layouts:
+    shared:
+      head:
+        title: CollectiveBlog
+      nav:
+        add_post: Добавить статью
+        application_name: CollectiveBlog
+        sign_in: Войти
+        sign_out: Выйти
+        register: Регистрация

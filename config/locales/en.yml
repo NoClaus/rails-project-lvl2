@@ -1,0 +1,22 @@
+en:
+  web:
+    posts:
+      form:
+        submit: Create article
+      create:
+        success: Article was successfully created.
+      show:
+        all: All articles
+        you_not_authorized_html: You are not authorized to leave comments - %{href}
+        sign_in: please login
+      new:
+        title: New article
+      index:
+        title: Collective blog
+        likes: 'Likes: '
+      comments:
+        create:
+          success: Comment was successfully created.
+        comment_form:
+          submit: Answer
+          answer: Answer
