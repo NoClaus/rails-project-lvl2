@@ -2,10 +2,10 @@ ru:
   layouts:
     shared:
       head:
-        title: Habr
+        title: Collective Blog
       nav:
         add_post: Добавить статью
-        application_name: Habr
+        application_name: Collective Blog
         sign_in: Войти
         sign_out: Выйти
         register: Регистрация
